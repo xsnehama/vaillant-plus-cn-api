@@ -59,7 +59,6 @@ class Token:
         s = json.dumps({
             f"{CONF_APP_ID}": self.app_id,
             f"{CONF_USERNAME}": self.username,
-            f"{CONF_PASSWORD}": self.password,
             f"{CONF_TOKEN}": self.access_token,
             f"{CONF_UID}": self.uid,
         })
@@ -73,7 +72,9 @@ class Token:
         return Token(
             app_id=data[CONF_APP_ID],
             username=data[CONF_USERNAME],
-            password=data[CONF_PASSWORD],
+            # Older serialized tokens included the password. Keep accepting
+            # them, but do not write it back into new token payloads.
+            password=data.get(CONF_PASSWORD, ""),
             access_token=data[CONF_TOKEN],
             uid=data[CONF_UID],
         )
