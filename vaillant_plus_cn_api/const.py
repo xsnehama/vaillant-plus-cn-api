@@ -18,6 +18,7 @@ STATE_STOPPED = "stopped"
 STATE_DISCONNECTED = "disconnected"
 
 EVT_DEVICE_ATTR_UPDATE = "device:attr:update"
+EVT_DEVICE_EVENT = "device:event"
 
 CONF_USERNAME = "username"
 CONF_PASSWORD = "password"

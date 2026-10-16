@@ -12,6 +12,7 @@ from .errors import (
 )
 from .const import (
   EVT_DEVICE_ATTR_UPDATE,
+  EVT_DEVICE_EVENT,
   STATE_CONNECTING,
   STATE_CONNECTED,
   STATE_SUBSCRIBED,
@@ -29,6 +30,7 @@ __all__ = [
   "InvalidAuthError",
   "InvalidCredentialsError",
   "EVT_DEVICE_ATTR_UPDATE",
+  "EVT_DEVICE_EVENT",
   "STATE_CONNECTING",
   "STATE_CONNECTED",
   "STATE_SUBSCRIBED",

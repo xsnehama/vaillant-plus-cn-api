@@ -8,7 +8,7 @@ from typing import Any
 
 import aiohttp
 
-from .const import API_HOST, APP_KEY, LOGGER, STATE_CONNECTING, STATE_STOPPED, STATE_CONNECTED, STATE_SUBSCRIBED, STATE_DISCONNECTED, EVT_DEVICE_ATTR_UPDATE
+from .const import API_HOST, APP_KEY, LOGGER, STATE_CONNECTING, STATE_STOPPED, STATE_CONNECTED, STATE_SUBSCRIBED, STATE_DISCONNECTED, EVT_DEVICE_ATTR_UPDATE, EVT_DEVICE_EVENT
 from .errors import InvalidTokenError, InvalidAuthError, WebsocketServerClosedConnectionError
 from .model import Token, Device
 
@@ -175,6 +175,22 @@ class VaillantWebsocketClient:  # pylint: disable=too-many-instance-attributes
                                     await self._async_on_update_handler(EVT_DEVICE_ATTR_UPDATE, { "data": data })
                                 elif self._on_update_handler is not None:
                                     self._on_update_handler(EVT_DEVICE_ATTR_UPDATE, { "data": data })
+                        elif msg_type == "0":
+                            device_id = msg.get("did")
+                            if device_id == self._device.id:
+                                event = {
+                                    "data": data,
+                                    "message": msg,
+                                }
+                                self._logger.info(
+                                    "Recv device event for %s: %s", device_id, data
+                                )
+                                if self._async_on_update_handler is not None:
+                                    await self._async_on_update_handler(
+                                        EVT_DEVICE_EVENT, event
+                                    )
+                                elif self._on_update_handler is not None:
+                                    self._on_update_handler(EVT_DEVICE_EVENT, event)
                         elif msg_type == "pong":
                             self._logger.debug("Recieved pong")
                             await self._watchdog.trigger()
